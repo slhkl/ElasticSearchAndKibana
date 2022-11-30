@@ -33,4 +33,10 @@ app.MapPost("/Post", ([FromServices]ProductBusiness productBusiness, [FromBody] 
     return "Ok";
 });
 
+app.MapDelete("/Delete/{id}", ([FromServices]ProductBusiness productBusines, int id) =>
+{
+    productBusines.Delete(id);
+    return "Ok";
+});
+
 app.Run();

@@ -25,5 +25,11 @@ namespace Business
         {
             await _elasticClient.IndexDocumentAsync(product);
         }
+
+
+        public async void Delete(int id)
+        {
+            await _elasticClient.DeleteAsync<Product>(id);
+        }
     }
 }
