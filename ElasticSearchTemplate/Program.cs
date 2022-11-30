@@ -22,6 +22,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.MapGet("Get", ([FromServices] ProductBusiness productBusiness) =>
+{
+    return productBusiness.Get();
+});
+
 app.MapGet("/Get/{keyword}", ([FromServices] ProductBusiness productBusiness, string keyword) =>
 {
     return productBusiness.Get(keyword);

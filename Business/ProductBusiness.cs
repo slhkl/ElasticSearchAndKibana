@@ -10,14 +10,26 @@ namespace Business
         {
             _elasticClient = elasticClient;
         }
-
+        /// <summary>
+        /// Searching in description prop only.
+        /// </summary>
+        /// <param name="keyword"></param>
+        /// <returns></returns>
         public async Task<List<Product>> Get(string keyword)
         {
             var result = await _elasticClient.SearchAsync<Product>(
                 x => x.Query(
-                    y => y.QueryString(
-                        z => z.Query('*' + keyword + '*')
-                        )).Size(5000));
+                    y => y.Fuzzy(z =>
+                        z.Name(keyword).Field(p => p.Description).Fuzziness(Fuzziness.Auto).Value(keyword)
+                    )
+                )
+            );
+            return result.Documents.ToList();
+        }
+
+        public async Task<List<Product>> Get()
+        {
+            var result = await _elasticClient.SearchAsync<Product>();
             return result.Documents.ToList();
         }
 
@@ -25,7 +37,6 @@ namespace Business
         {
             await _elasticClient.IndexDocumentAsync(product);
         }
-
 
         public async void Delete(int id)
         {
